@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Forecast</title>
+  <style>
+    /* ===== Base Styles ===== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Poppins', 'Arial', sans-serif;
+      background: linear-gradient(135deg, #20274B, #8742A8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #fff;
+      line-height: 1.6;
+      padding: 20px;
+
+    }
+
+    /* ===== Container Styles ===== */
+    .container {
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 950px;
+      min-height: 90vh;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* ===== Header Styles ===== */
+    .app-header {
+      margin-bottom: 30px;
+    }
+
+    .app-title {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      background: linear-gradient(to right, #fff, #c9d6ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .app-subtitle {
+      font-size: 1rem;
+      opacity: 0.8;
+      font-weight: 300;
+    }
+
+    /* ===== Input Styles ===== */
+    .input-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .input {
+      padding: 16px 25px;
+      font-size: 1.1rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      width: 100%;
+      margin-bottom: 15px;
+      outline: none;
+      transition: all 0.3s ease;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .input:focus {
+      border-color: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* ===== Button Styles ===== */
+    .btn {
+      padding: 16px 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(135deg, #5a6fd1, #6a3d9a);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    /* ===== Weather Info Styles ===== */
+    .weather-info {
+      margin-top: 30px;
+      padding: 30px;
+      border-radius: 15px;
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: all 0.5s ease;
+    }
+
+    #ans {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+
+    /* ===== Footer Styles ===== */
+    .app-footer {
+      margin-top: 30px;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    /* ===== Responsive Styles ===== */
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 20px;
+        min-height: auto;
+      }
+      
+      .app-title {
+        font-size: 2rem;
+      }
+      
+      .weather-info {
+        padding: 20px;
+        min-height: 200px;
+      }
+      
+      #ans {
+        font-size: 1.4rem;
+      }
+    }
+
+
+    /* ===== Weather Display Styles ===== */
+.weather-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.weather-icon {
+  font-size: 4rem;
+  margin-bottom: 10px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.weather-temp {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin: 10px 0;
+  background: linear-gradient(to right, #fff, #c9d6ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.weather-city {
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.weather-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  text-align: left;
+  font-size: 1.1rem;
+}
+
+.weather-details div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.weather-condition {
+  grid-column: span 2;
+  text-align: center;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .weather-temp {
+    font-size: 2.8rem;
+  }
+  
+  .weather-city {
+    font-size: 1.5rem;
+  }
+  
+  .weather-details {
+    grid-template-columns: 1fr;
+  }
+  
+  .weather-condition {
+    grid-column: span 1;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="app-header">
+      <h1 class="app-title">Weather Forecast</h1>
+      <p class="app-subtitle">Get accurate weather information for any location</p>
+    </div>
+
+    <div class="input-group">
+      <input 
+        type="text" 
+        placeholder="Enter city name..." 
+        id="ans2" 
+        class="input"
+        aria-label="City input"
+      >
+      <button id="submitButton" class="btn">Get Weather</button>
+    </div>
+
+    <div class="weather-info">
+      <h1 id="ans">Enter a city to check the weather</h1>
+    </div>
+
+    <div class="app-footer">
+      <p>© 2023 Weather Forecast App</p>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>
